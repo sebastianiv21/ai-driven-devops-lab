@@ -121,7 +121,8 @@ de cotización ya mostraba el bug de la Semana 2 (10 artículos → `90.0`).
 >   `cache-dependency-path`, sintaxis verificada en la documentación de `actions/setup-python@v5`)
 >   y `permissions: contents: read` (mínimo privilegio para el `GITHUB_TOKEN`).
 > - `actionlint` sobre ambos workflows: 0 errores.
-> Evidencia: `evidencia/semana3/01..03`.
+> Evidencia: `evidencia/semana3/01..03` y la
+> [corrida del CI endurecido en GitHub](https://github.com/sebastianiv21/ai-driven-devops-lab/actions/runs/44153834624).
 
 **Qué acertó / qué falló la IA**
 > Acertó la predicción exacta. Falló en un detalle de herramienta: usó `actionlint -color=never`,
@@ -133,6 +134,58 @@ de cotización ya mostraba el bug de la Semana 2 (10 artículos → `90.0`).
 
 **Lección aprendida (una frase)**
 > Pedirle a la IA que prediga el fallo y luego reproducirlo convierte una suposición en evidencia; y los flags de CLI que "suenan bien" se verifican igual.
+
+---
+
+## Semana 4 — Arquitecturas modernas con IA / Servicios de IA en la nube
+
+**¿Usaste IA para razonar sobre una decisión de arquitectura, o evaluaste/integraste algún servicio de IA gestionado esta semana?**
+> Sí: revisión de seguridad del bucket S3 y diseño conceptual de búsqueda semántica sobre los reportes.
+
+**Contexto que le diste a la IA**
+> `main.tf` completo, que el bucket guardará reportes con datos de clientes, y la pregunta:
+> "¿esta configuración es apropiada para datos de clientes? Explica antes de corregir".
+
+**Problema o pregunta que trabajaste**
+> Bucket con `acl = "public-read"` y versionado `Disabled`, pendiente de aprobar.
+
+**Cómo usaste la IA**
+> 1) Explicación línea por línea: `public-read` deja listar y descargar todos los reportes de
+>    forma anónima; sin versionado, un borrado o sobrescritura no se puede recuperar.
+> 2) `terraform plan` contra LocalStack (Terraform y LocalStack en Docker; nunca `apply`).
+>    **El plan pasó sin advertencias**: Terraform no evalúa si algo es seguro.
+> 3) `trivy config` sobre el original: 9 hallazgos (6 HIGH), entre ellos el ACL público y la
+>    ausencia de public access block, cifrado con llave propia y versionado.
+> 4) Corregí: `BucketOwnerEnforced` (ACLs desactivadas), public access block completo, cifrado
+>    SSE-KMS con llave propia y rotación, versionado `Enabled`, lifecycle que expira versiones
+>    viejas a los 90 días (controla el costo del versionado) y policy que rechaza tráfico sin TLS.
+
+**Cómo validaste lo que propuso**
+> `terraform validate` OK; `plan`: 8 recursos a crear; `trivy config` del corregido: **0 hallazgos**.
+> Excepción documentada en el código: logging de acceso (AWS-0089, LOW), que requiere un bucket
+> de logs dedicado fuera del alcance del lab.
+> Evidencia: `evidencia/semana4/01..04` y `main.tf.original`.
+
+**Qué acertó / qué falló la IA**
+> Además de los dos riesgos evidentes (ACL pública y versionado), propuso controles que el lab no
+> pedía: lifecycle para el costo del versionado y la policy de solo-TLS. El escáner aportó lo que
+> la revisión inicial no mencionó: cifrado con llave administrada por el equipo.
+
+**Parte 2 — Servicio de IA en la nube (diseño, sin implementar)**
+> Búsqueda semántica sobre los reportes: **Amazon Bedrock Knowledge Bases** apuntando a este
+> mismo bucket como fuente (chunking, embeddings con Titan y vector store gestionados; se
+> resincroniza cuando el worker escribe reportes nuevos). Alternativa si ya existe Postgres:
+> `pgvector` con embeddings generados por un job, menos piezas gestionadas pero más código propio.
+> Consideraciones: los reportes tienen datos de clientes → redactar PII antes de generar
+> embeddings, mismo KMS, rol IAM de solo lectura sobre el bucket, región que cumpla la residencia
+> de datos, y costo por sincronización. Esto no se puede validar con LocalStack: se probaría en
+> una cuenta sandbox con datos sintéticos.
+
+**Habilidad practicada esta semana**
+> [x] Contexto estructurado a la IA   [x] Investigación antes de solución   [x] Validación de comandos/config   [x] Protección de información sensible
+
+**Lección aprendida (una frase)**
+> Un `terraform plan` limpio solo dice que el código es válido, no que sea seguro: la revisión de seguridad es un paso aparte.
 
 ---
 
