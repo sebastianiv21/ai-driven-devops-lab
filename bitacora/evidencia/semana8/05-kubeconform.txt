@@ -1,0 +1,11 @@
+Unable to find image 'ghcr.io/yannh/kubeconform:v0.6.7' locally
+v0.6.7: Pulling from yannh/kubeconform
+7ef24e00f831: Pulling fs layer
+e19ad4bb4df3: Pulling fs layer
+e19ad4bb4df3: Download complete
+e19ad4bb4df3: Pull complete
+7ef24e00f831: Download complete
+7ef24e00f831: Pull complete
+Digest: sha256:0925177fb05b44ce18574076141b5c3d83235e1904d3f952182ac99ddc45762c
+Status: Downloaded newer image for ghcr.io/yannh/kubeconform:v0.6.7
+Summary: 1 resource found in 1 file - Valid: 1, Invalid: 0, Errors: 0, Skipped: 0

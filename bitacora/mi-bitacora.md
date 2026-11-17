@@ -324,3 +324,57 @@ de cotización ya mostraba el bug de la Semana 2 (10 artículos → `90.0`).
 
 ---
 
+## Semana 8 — DevSecOps + IA responsable
+
+**¿Revisaste implicaciones de seguridad de tu proyecto con ayuda de IA, o aplicaste principios de uso responsable esta semana?**
+> Sí: revisión y hardening del Dockerfile y el manifiesto de Kubernetes.
+
+**Contexto que le diste a la IA**
+> Ambos archivos. Los secretos son ficticios por diseño del lab; en un caso real habría
+> reemplazado los valores por placeholders (`<DB_PASSWORD>`, `<STRIPE_KEY>`) antes de compartirlos.
+
+**Problema o pregunta que trabajaste**
+> El equipo pide luz verde a producción para un manifiesto y Dockerfile "que funcionan en su laptop".
+
+**Cómo usaste la IA**
+> Revisión con el riesgo de cada problema, contrastada con mi revisión previa y con escáneres:
+> - **Manifiesto:** credenciales de BD y llave `sk_live_` en texto plano (y hostname interno
+>   expuesto), `privileged: true`, `runAsUser: 0`, `resources: {}`, imagen `:latest`, namespace
+>   `default`, sin probes, sin `drop ALL`, sin seccomp, sin filesystem de solo lectura.
+> - **Dockerfile:** corre como root, base `python:3.11` completa (más superficie de ataque),
+>   `COPY . .` sin `.dockerignore` (puede colar `.env`/`.git`), y el `pip install` comentado: la
+>   imagen **ni siquiera arranca** (Flask no está instalado).
+
+**Cómo validaste lo que propuso**
+> - Corregidos en `Dockerfile-seguro` y `manifiesto-seguro.yaml` (originales conservados para comparar).
+> - Build real y ejecución con las mismas restricciones del manifiesto (`--read-only`,
+>   `--cap-drop ALL`, `no-new-privileges`): corre como `uid=10001`, escribir en `/app` falla con
+>   `Read-only file system`, `/health` responde y la cotización de 10 artículos da `85.0`.
+> - `kubeconform -strict`: manifiesto válido. `trivy config`: de 19 hallazgos (manifiesto) + 2
+>   (Dockerfile) a **0**.
+> Evidencia: `evidencia/semana8/01..06`.
+
+**Qué acertó / qué falló la IA**
+> La revisión de la IA cubrió todos los problemas intencionales del lab y además señaló el
+> `pip install` comentado, que no es de seguridad pero rompe el despliegue. El hallazgo clave fue de los **escáneres**:
+> `trivy fs --scanners secret` **no detectó ninguno de los dos secretos**, y `trivy config` **ignoró
+> el Dockerfile** por llamarse `Dockerfile-inseguro`. Tuve que copiarlo como `Dockerfile` para
+> escanearlo.
+
+**Checklist reutilizable:** `labs/semana8-devsecops/checklist-pre-despliegue.md`.
+Pendiente conocido: la imagen sigue usando el servidor de desarrollo de Flask; para producción
+habría que servirla con gunicorn (quedó como ítem del checklist).
+
+**Cómo protegí información sensible durante el curso**
+> Ruta A para no exponer infraestructura de mi empresa; credenciales ficticias de LocalStack;
+> ningún secreto real en prompts ni en el repo; `.venv` y estado de Terraform fuera de git.
+> Si un secreto real llegara a un commit, el paso correcto es rotarlo, no solo borrarlo.
+
+**Habilidad practicada esta semana**
+> [ ] Contexto estructurado a la IA   [x] Investigación antes de solución   [x] Validación de comandos/config   [x] Protección de información sensible
+
+**Lección aprendida (una frase)**
+> Ni la IA ni los escáneres son la revisión: son capas, y cada una ve cosas que las otras no ven.
+
+---
+

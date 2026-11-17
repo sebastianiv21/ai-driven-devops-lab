@@ -1,0 +1,16 @@
+## build
+sha256:115aedaeef2b3b8d204138136010ae9057286e2e251030045333e522ddf499e5
+
+## usuario dentro del contenedor (docker exec id)
+uid=10001(app) gid=10001(app) groups=10001(app)
+
+## escribir en el filesystem raíz debe fallar
+touch: cannot touch '/app/x': Read-only file system
+
+## GET /health
+{"status":"ok"}
+
+
+## POST /orders/quote con 10 artículos (fix de la Semana 2)
+{"total":85.0}
+

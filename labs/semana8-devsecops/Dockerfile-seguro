@@ -1,0 +1,24 @@
+# Build: docker build -f labs/semana8-devsecops/Dockerfile-seguro -t orders-api:1.0.0 app/api
+# Imagen base mínima con versión fija (en producción, fijar también el digest @sha256:...).
+FROM python:3.11.11-slim
+
+ENV PYTHONDONTWRITEBYTECODE=1 \
+    PYTHONUNBUFFERED=1
+
+WORKDIR /app
+
+# Dependencias primero (capa cacheable) y sin caché de pip dentro de la imagen.
+COPY requirements.txt .
+RUN pip install --no-cache-dir -r requirements.txt
+
+# Solo el código de la app, no todo el contexto (evita colar .env, .git, llaves locales).
+COPY app.py orders.py ./
+
+# Usuario sin privilegios con UID/GID fijos, coherentes con el securityContext del manifiesto.
+RUN groupadd --gid 10001 app && useradd --uid 10001 --gid app --no-create-home --shell /usr/sbin/nologin app
+USER 10001:10001
+
+EXPOSE 8080
+HEALTHCHECK --interval=30s --timeout=3s --retries=3 \
+  CMD ["python", "-c", "import urllib.request; urllib.request.urlopen('http://localhost:8080/health', timeout=2)"]
+CMD ["python", "app.py"]
