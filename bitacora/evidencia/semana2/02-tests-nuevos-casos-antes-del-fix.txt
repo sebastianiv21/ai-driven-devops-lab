@@ -1,0 +1,26 @@
+..F...F.                                                                 [100%]
+=================================== FAILURES ===================================
+________________ test_descuento_15_porciento_en_el_limite_de_10 ________________
+
+    def test_descuento_15_porciento_en_el_limite_de_10():
+        """Este es el caso límite: 10 artículos exactos deben tener 15% de descuento."""
+        items = [{"price": 10, "quantity": 10}]
+>       assert apply_bulk_discount(items) == 85.0
+E       AssertionError: assert 90.0 == 85.0
+E        +  where 90.0 = apply_bulk_discount([{'price': 10, 'quantity': 10}])
+
+labs/semana2-desarrollo-testing/tests/test_orders.py:26: AssertionError
+______________ test_descuento_15_porciento_sumando_varias_lineas _______________
+
+    def test_descuento_15_porciento_sumando_varias_lineas():
+        """La regla cuenta artículos totales de la orden, no por línea: 4 + 6 = 10."""
+        items = [{"price": 10, "quantity": 4}, {"price": 20, "quantity": 6}]
+>       assert apply_bulk_discount(items) == 136.0
+E       AssertionError: assert 144.0 == 136.0
+E        +  where 144.0 = apply_bulk_discount([{'price': 10, 'quantity': 4}, {'price': 20, 'quantity': 6}])
+
+labs/semana2-desarrollo-testing/tests/test_orders.py:51: AssertionError
+=========================== short test summary info ============================
+FAILED labs/semana2-desarrollo-testing/tests/test_orders.py::test_descuento_15_porciento_en_el_limite_de_10
+FAILED labs/semana2-desarrollo-testing/tests/test_orders.py::test_descuento_15_porciento_sumando_varias_lineas
+2 failed, 6 passed in 0.01s

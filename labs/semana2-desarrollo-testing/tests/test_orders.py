@@ -29,3 +29,27 @@ def test_descuento_15_porciento_en_el_limite_de_10():
 def test_descuento_15_porciento_mas_de_10():
     items = [{"price": 10, "quantity": 12}]
     assert apply_bulk_discount(items) == 102.0
+
+
+# --- Casos límite agregados (Semana 2, bonus) ---
+
+def test_sin_descuento_en_el_limite_de_5():
+    """5 artículos es el último valor sin descuento."""
+    items = [{"price": 10, "quantity": 5}]
+    assert apply_bulk_discount(items) == 50.0
+
+
+def test_descuento_10_porciento_en_el_limite_de_9():
+    """9 artículos es el último valor con 10%."""
+    items = [{"price": 10, "quantity": 9}]
+    assert apply_bulk_discount(items) == 81.0
+
+
+def test_descuento_15_porciento_sumando_varias_lineas():
+    """La regla cuenta artículos totales de la orden, no por línea: 4 + 6 = 10."""
+    items = [{"price": 10, "quantity": 4}, {"price": 20, "quantity": 6}]
+    assert apply_bulk_discount(items) == 136.0
+
+
+def test_orden_vacia():
+    assert apply_bulk_discount([]) == 0

@@ -20,8 +20,8 @@ def apply_bulk_discount(items):
     """Aplica el descuento por volumen según la cantidad total de artículos."""
     total_quantity = sum(item["quantity"] for item in items)
 
-    if total_quantity > 10:
+    if total_quantity >= 10:
         return calculate_total(items, discount_percent=15)
-    elif total_quantity > 5:
+    elif total_quantity >= 6:
         return calculate_total(items, discount_percent=10)
     return calculate_total(items, discount_percent=0)

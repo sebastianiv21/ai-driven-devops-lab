@@ -58,3 +58,39 @@ de cotización ya mostraba el bug de la Semana 2 (10 artículos → `90.0`).
 
 ---
 
+## Semana 2 — Desarrollo asistido por IA / Testing y calidad con IA
+
+**¿Usaste IA para acelerar programación, debugging, documentación o revisión de código esta semana? ¿O para generar/mejorar casos de prueba?**
+> Sí: para investigar el bug de descuento y para proponer casos límite que los tests no cubrían.
+
+**Contexto que le diste a la IA**
+> La regla de negocio completa (6–9 → 10 %, ≥10 → 15 %, <6 → 0 %), `app/api/orders.py`, el
+> test que fallaba y la instrucción de explicar la causa **antes** de proponer el fix.
+
+**Problema o pregunta que trabajaste**
+> Clientes con exactamente 10 artículos reciben 10 % en vez de 15 %.
+
+**Cómo usaste la IA**
+> 1) Corrí los tests antes de mirar el código: 1 falla (`assert 90.0 == 85.0`).
+> 2) La IA identificó que `total_quantity > 10` excluye el 10 y que la regla dice "10 o más".
+> 3) Le pedí casos límite adicionales; propuso 5, 9, orden vacía y **varias líneas que suman 10**.
+> 4) Escribí esos tests primero: el de varias líneas también falló, confirmando que el bug no
+>    era solo del caso de una línea. Luego apliqué el fix (`>= 10`, y `>= 6` por legibilidad).
+
+**Cómo validaste lo que propuso**
+> Los tests nuevos fallaron antes del fix (2 fallas) y pasaron después (8/8). También verifiqué
+> el endpoint real: 10 artículos → `85.0` (ver Semana 8, contenedor endurecido).
+> Evidencia: `evidencia/semana2/01..04`.
+
+**Qué acertó / qué falló la IA**
+> Acertó la causa a la primera. Su aporte más valioso fue el caso de varias líneas: es el que un
+> cliente real dispara y no estaba cubierto. No falló en este lab.
+
+**Habilidad practicada esta semana**
+> [x] Contexto estructurado a la IA   [x] Investigación antes de solución   [x] Validación de comandos/config   [ ] Protección de información sensible
+
+**Lección aprendida (una frase)**
+> Un test que falla antes del fix vale más que la explicación de la IA: es la prueba de que la hipótesis era la correcta.
+
+---
+

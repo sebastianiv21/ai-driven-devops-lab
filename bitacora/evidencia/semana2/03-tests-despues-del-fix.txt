@@ -1,0 +1,15 @@
+============================= test session starts ==============================
+platform darwin -- Python 3.14.5, pytest-8.2.0, pluggy-1.7.0 -- <repo>/.venv/bin/python
+rootdir: <repo>
+collecting ... collected 8 items
+
+labs/semana2-desarrollo-testing/tests/test_orders.py::test_sin_descuento_pocos_articulos PASSED [ 12%]
+labs/semana2-desarrollo-testing/tests/test_orders.py::test_descuento_10_porciento_rango_medio PASSED [ 25%]
+labs/semana2-desarrollo-testing/tests/test_orders.py::test_descuento_15_porciento_en_el_limite_de_10 PASSED [ 37%]
+labs/semana2-desarrollo-testing/tests/test_orders.py::test_descuento_15_porciento_mas_de_10 PASSED [ 50%]
+labs/semana2-desarrollo-testing/tests/test_orders.py::test_sin_descuento_en_el_limite_de_5 PASSED [ 62%]
+labs/semana2-desarrollo-testing/tests/test_orders.py::test_descuento_10_porciento_en_el_limite_de_9 PASSED [ 75%]
+labs/semana2-desarrollo-testing/tests/test_orders.py::test_descuento_15_porciento_sumando_varias_lineas PASSED [ 87%]
+labs/semana2-desarrollo-testing/tests/test_orders.py::test_orden_vacia PASSED [100%]
+
+============================== 8 passed in 0.01s ===============================
