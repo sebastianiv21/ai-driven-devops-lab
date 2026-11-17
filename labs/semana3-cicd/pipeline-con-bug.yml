@@ -1,4 +1,4 @@
-name: CI (con bug intencional)
+name: CI (bug corregido)
 
 on:
   push:
@@ -14,11 +14,11 @@ jobs:
         with:
           python-version: "3.11"
 
-      # BUG: los tests corren ANTES de instalar las dependencias
-      - name: Correr tests
-        run: python -m pytest labs/semana2-desarrollo-testing/tests/ -v
-
+      # Las dependencias (incluido pytest) se instalan antes de correr los tests.
       - name: Instalar dependencias
         run: |
           pip install -r app/api/requirements.txt
           pip install -r labs/semana2-desarrollo-testing/requirements.txt
+
+      - name: Correr tests
+        run: python -m pytest labs/semana2-desarrollo-testing/tests/ -v

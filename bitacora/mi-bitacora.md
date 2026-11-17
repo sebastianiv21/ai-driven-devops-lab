@@ -80,7 +80,10 @@ de cotización ya mostraba el bug de la Semana 2 (10 artículos → `90.0`).
 **Cómo validaste lo que propuso**
 > Los tests nuevos fallaron antes del fix (2 fallas) y pasaron después (8/8). También verifiqué
 > el endpoint real: 10 artículos → `85.0` (ver Semana 8, contenedor endurecido).
-> Evidencia: `evidencia/semana2/01..04`.
+> Evidencia: `evidencia/semana2/01..04`. En GitHub Actions: el CI falló con el bug
+> ([corrida roja](https://github.com/sebastianiv21/ai-driven-devops-lab/actions/runs/44151930359),
+> `assert 90.0 == 85.0`) y pasó con el fix
+> ([corrida verde](https://github.com/sebastianiv21/ai-driven-devops-lab/actions/runs/44152517650)).
 
 **Qué acertó / qué falló la IA**
 > Acertó la causa a la primera. Su aporte más valioso fue el caso de varias líneas: es el que un
@@ -91,6 +94,45 @@ de cotización ya mostraba el bug de la Semana 2 (10 artículos → `90.0`).
 
 **Lección aprendida (una frase)**
 > Un test que falla antes del fix vale más que la explicación de la IA: es la prueba de que la hipótesis era la correcta.
+
+---
+
+## Semana 3 — Fundamentos de CI/CD / Pipelines con IA
+
+**¿Analizaste, troubleshooteaste o mejoraste un pipeline (propio o del sandbox) con ayuda de IA esta semana?**
+> Sí, el pipeline del sandbox.
+
+**Contexto que le diste a la IA**
+> `pipeline-con-bug.yml`, el `ci.yml` de referencia, y la instrucción de predecir el error antes de correrlo.
+
+**Problema o pregunta que trabajaste**
+> El pipeline falla en cada push después de "solo reordenar pasos".
+
+**Cómo usaste la IA**
+> Predicción de la IA: con el paso de tests antes de la instalación, `setup-python` deja un
+> Python limpio y el paso falla con `No module named pytest`. Para confirmarlo sin GitHub,
+> reproduje ambos órdenes en un contenedor limpio `python:3.11-slim` (misma versión que el
+> workflow). Después le pedí una mejora adicional.
+
+**Cómo validaste lo que propuso**
+> - Orden con bug: `/usr/local/bin/python: No module named pytest`, exit 1 → coincide con la predicción.
+> - Orden corregido: 8 passed, exit 0.
+> - Mejoras aplicadas a `.github/workflows/ci.yml`: caché de pip (`cache: pip` +
+>   `cache-dependency-path`, sintaxis verificada en la documentación de `actions/setup-python@v5`)
+>   y `permissions: contents: read` (mínimo privilegio para el `GITHUB_TOKEN`).
+> - `actionlint` sobre ambos workflows: 0 errores.
+> Evidencia: `evidencia/semana3/01..03`.
+
+**Qué acertó / qué falló la IA**
+> Acertó la predicción exacta. Falló en un detalle de herramienta: usó `actionlint -color=never`,
+> un flag que no existe (`-color` es booleano; el correcto es `-no-color`). Lo detecté porque el
+> comando devolvió el texto de ayuda en vez de un resultado.
+
+**Habilidad practicada esta semana**
+> [x] Contexto estructurado a la IA   [x] Investigación antes de solución   [x] Validación de comandos/config   [ ] Protección de información sensible
+
+**Lección aprendida (una frase)**
+> Pedirle a la IA que prediga el fallo y luego reproducirlo convierte una suposición en evidencia; y los flags de CLI que "suenan bien" se verifican igual.
 
 ---
 

@@ -1,0 +1,11 @@
+verbose: Linting 2 files
+verbose: Linting .github/workflows/ci.yml
+verbose: Using project at /repo
+verbose: Found 0 parse errors in 0 ms for .github/workflows/ci.yml
+verbose: Linting labs/semana3-cicd/pipeline-con-bug.yml
+verbose: Using project at /repo
+verbose: Found 0 parse errors in 0 ms for labs/semana3-cicd/pipeline-con-bug.yml
+verbose: Found total 0 errors in 22 ms for labs/semana3-cicd/pipeline-con-bug.yml
+verbose: Found total 0 errors in 28 ms for .github/workflows/ci.yml
+verbose: Found 0 errors in 2 files
+exit: 0

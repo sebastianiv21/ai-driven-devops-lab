@@ -1,0 +1,22 @@
+### Orden con bug: tests -> install
+Unable to find image 'python:3.11-slim' locally
+3.11-slim: Pulling from library/python
+fcbeeb45cd1c: Pulling fs layer
+acd43e9bebc3: Pulling fs layer
+e8ca77f52ccd: Pulling fs layer
+657dd0432839: Pulling fs layer
+fcbeeb45cd1c: Download complete
+657dd0432839: Download complete
+0dc1c450a339: Download complete
+c564c1dcb578: Download complete
+acd43e9bebc3: Download complete
+e8ca77f52ccd: Download complete
+acd43e9bebc3: Pull complete
+657dd0432839: Pull complete
+fcbeeb45cd1c: Pull complete
+e8ca77f52ccd: Pull complete
+Digest: sha256:07d4824036af339fa1b6ef769cc99d9c10a141769538b52b3b597c84f7a7b535
+Status: Downloaded newer image for python:3.11-slim
+>> Correr tests
+/usr/local/bin/python: No module named pytest
+exit code: 1
