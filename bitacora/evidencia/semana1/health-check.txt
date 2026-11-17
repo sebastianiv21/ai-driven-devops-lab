@@ -1,0 +1,5 @@
+$ curl -s http://localhost:8080/health
+{"status":"ok"}
+
+$ curl -s -X POST localhost:8080/orders/quote -d '{"items":[{"price":10,"quantity":10}]}'
+{"total":90.0}
