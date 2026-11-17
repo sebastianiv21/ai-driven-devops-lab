@@ -282,3 +282,45 @@ de cotización ya mostraba el bug de la Semana 2 (10 artículos → `90.0`).
 
 ---
 
+## Semana 7 — Runbooks inteligentes / ChatOps con IA
+
+**¿Generaste o probaste un runbook dinámico con IA, o usaste una interfaz conversacional (ChatOps) esta semana?**
+> Sí: runbook para "connection pool exhausted" y diseño conceptual del bot de ChatOps.
+
+**Contexto que le diste a la IA**
+> El postmortem de la Semana 6 (causa probable, evidencia, hipótesis descartadas) y la estructura mínima del runbook.
+
+**Problema o pregunta que trabajaste**
+> No existía runbook: cada vez que pasa, alguien lo resuelve desde cero.
+
+**Cómo usaste la IA**
+> Generó el runbook con dos requisitos explícitos: diagnóstico **solo lectura** y cada
+> mitigación marcada según requiera o no aprobación. Incluye una tabla que relaciona lo observado
+> con el tipo de causa, con umbrales sacados del log de la Semana 6.
+> Runbook: `labs/semana7-runbooks-chatops/runbook-connection-pool.md` ·
+> ChatOps: `labs/semana7-runbooks-chatops/chatops-diseno.md`.
+
+**Cómo validaste lo que propuso**
+> Comparé cada paso contra la evidencia real del incidente (umbrales de latencia y volumen
+> sacados del log) y revisé que los comandos de diagnóstico no modifiquen nada. Las
+> mitigaciones destructivas (reiniciar, cancelar queries) quedaron marcadas con aprobación humana.
+
+**Qué acertó / qué falló la IA**
+> La estructura, las queries de diagnóstico de Postgres y la advertencia de que escalar réplicas
+> multiplica las conexiones a la BD (condición `réplicas × pool_size < max_connections`) fueron
+> útiles. Límite honesto: los comandos de `kubectl` y SQL son genéricos y **no se probaron contra
+> un cluster ni una BD reales**; antes de usarlo habría que ensayarlo en staging.
+
+**Dónde puse el límite de autonomía del bot**
+> El bot lee, resume, clasifica y propone; no modifica producción sin una persona que apruebe con
+> su identidad (dos personas para acciones destructivas). Es el mismo criterio que el agente de la
+> Semana 5: actuar solo en lo reversible, detenerse ante lo sistémico, dejar todo auditado.
+
+**Habilidad practicada esta semana**
+> [x] Contexto estructurado a la IA   [x] Investigación antes de solución   [x] Validación de comandos/config   [ ] Protección de información sensible
+
+**Lección aprendida (una frase)**
+> Un buen runbook generado con IA se construye sobre el postmortem real, y su valor está en marcar qué pasos puede ejecutar una máquina y cuáles no.
+
+---
+
