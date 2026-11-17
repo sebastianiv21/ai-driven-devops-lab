@@ -378,3 +378,63 @@ habría que servirla con gunicorn (quedó como ítem del checklist).
 
 ---
 
+## Consolidado — Proyecto Integrador (Sesión 16)
+
+**Problema (resumen final)**
+> `orders-api` no estaba listo para producción: un bug de negocio en el límite de descuentos,
+> un pipeline roto, un bucket público con datos de clientes, reintentos manuales, un incidente
+> sin runbook (pool de conexiones agotado) y un despliegue con secretos en texto plano y
+> contenedores privilegiados. Objetivo: resolverlo con la IA como copiloto, sin aceptar nada sin evidencia.
+
+**Evidencia inicial disponible**
+> Tests que fallaban (1/4), un workflow que fallaba en cada push, un `main.tf` sin revisar, una
+> cola con órdenes fallidas, 155 líneas de log del incidente y un manifiesto/Dockerfile "de laptop".
+
+**Investigación asistida por IA (resumen del proceso completo)**
+> El mismo ciclo cada semana: **contexto completo → pedir explicación o predicción antes del fix →
+> reproducir o verificar con un comando real → corregir → volver a verificar**. Herramientas de
+> verificación: pytest, contenedores limpios para reproducir CI, actionlint, `terraform plan`
+> contra LocalStack, trivy, kubeconform, y `awk`/`grep` para contar el log a mano.
+
+**Hipótesis consideradas y descartadas**
+> - Incidente: **fuga de conexiones** — descartada: se recuperó sola en ~2 min sin reinicio.
+> - Incidente: **pico de tráfico vs. tormenta de reintentos** — no se puede decidir con el log:
+>   el volumen ×4 coincide con la ventana pero puede ser causa o efecto.
+> - Bug de descuento: "solo afecta órdenes de una línea" — descartada con el test de 4 + 6 artículos.
+> - Seguridad: "el escáner cubre los secretos" — descartada: trivy no detectó los dos secretos del manifiesto.
+
+**Causa raíz**
+> - Descuento: comparación `> 10` en lugar de `>= 10`.
+> - Pipeline: los tests corrían antes de instalar dependencias.
+> - Bucket: ACL `public-read` sin public access block ni cifrado/versionado.
+> - Incidente: saturación del pool de conexiones a la BD por carga (probable, no confirmada).
+> - Despliegue: secretos en el manifiesto y contenedor privilegiado como root.
+
+**Solución propuesta**
+> Fix + 4 tests de casos límite; pipeline reordenado con caché y permisos mínimos; bucket privado,
+> cifrado con KMS y versionado; agente de reintentos con límite, escalación y circuit breaker;
+> postmortem + runbook + diseño de ChatOps con aprobación humana; Dockerfile y manifiesto
+> endurecidos con secretos externos; checklist de pre-despliegue.
+
+**Cómo se validaría en producción**
+> - Pipeline de PR con pytest, actionlint, `trivy config`, kubeconform y escaneo de secretos que
+>   bloqueen el merge; `terraform plan` revisado en el PR antes del apply desde CI.
+> - Despliegue con Argo CD a un namespace de staging, smoke test de `/health` y `/orders/quote`.
+> - Alertas por tasa de 5xx y por espera de conexiones del pool; simular carga para confirmar que
+>   el runbook detecta y clasifica el incidente.
+> - Antes de habilitar el agente: arreglar el worker para que respete el `status`, correr en `--dry-run` una semana y revisar sus logs.
+
+**Evaluación general de la IA como colaboradora**
+> **Bien de forma consistente:** encontrar la causa probable rápido, proponer casos límite,
+> explicar riesgos de configuración y producir borradores (postmortem, runbook, checklist) que
+> solo hubo que ajustar.
+> **Donde la corregí:** flags de CLI que suenan correctos pero no existen (`-color=never`),
+> asumir que una herramienta local estaba lista (`terraform` vía tfenv sin versión configurada:
+> se cambió a contenedores), y dar por buena la cobertura de escáneres que en realidad no veían
+> el archivo ni los secretos.
+> Los hallazgos más importantes salieron de verificar más allá de lo pedido: el worker que ignora
+> `needs_human`, el volumen ×4 en el log y los escáneres ciegos a los secretos.
+
+**Lo más valioso que aprendiste sobre colaborar con IA en DevOps**
+> La IA acelera la hipótesis; la evidencia la confirma. El mejor patrón fue pedir predicción o
+> explicación antes del fix y después intentar romperla con un comando real.
