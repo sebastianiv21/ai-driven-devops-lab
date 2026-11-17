@@ -26,4 +26,4 @@ jobs:
           pip install -r app/api/requirements.txt
           pip install -r labs/semana2-desarrollo-testing/requirements.txt
       - name: Correr tests
-        run: python -m pytest labs/semana2-desarrollo-testing/tests/ -v
+        run: python -m pytest labs/semana2-desarrollo-testing/tests/ labs/semana5-agentes/tests/ -v

@@ -1,0 +1,144 @@
+FFFFFFFFF                                                                [100%]
+=================================== FAILURES ===================================
+______________________ test_cola_inexistente_no_es_error _______________________
+
+tmp_path = PosixPath('<tmp>
+
+    def test_cola_inexistente_no_es_error(tmp_path):
+>       assert agente.load_queue(tmp_path / "no-existe.json") == []
+E       TypeError: load_queue() takes 0 positional arguments but 1 was given
+
+labs/semana5-agentes/tests/test_agente.py:32: TypeError
+____________________ test_json_corrupto_falla_ruidosamente _____________________
+
+tmp_path = PosixPath('<tmp>
+
+    def test_json_corrupto_falla_ruidosamente(tmp_path):
+        roto = tmp_path / "queue.json"
+        roto.write_text("{no es json")
+        with pytest.raises(json.JSONDecodeError):
+>           agente.load_queue(roto)
+E           TypeError: load_queue() takes 0 positional arguments but 1 was given
+
+labs/semana5-agentes/tests/test_agente.py:39: TypeError
+________________________ test_needs_retry[orden0-False] ________________________
+
+orden = {'attempts': 0, 'status': 'completed'}, esperado = False
+
+    @pytest.mark.parametrize(
+        "orden, esperado",
+        [
+            ({"status": "completed", "attempts": 0}, False),
+            ({"status": "pending", "attempts": 0}, False),
+            ({"status": "failed", "attempts": 1}, True),
+            ({"status": "failed", "attempts": 3}, False),
+        ],
+    )
+    def test_needs_retry(orden, esperado):
+>       assert agente.needs_retry(orden) is esperado
+E       AssertionError: assert None is False
+E        +  where None = <function needs_retry at 0x108e471c0>({'attempts': 0, 'status': 'completed'})
+E        +    where <function needs_retry at 0x108e471c0> = agente.needs_retry
+
+labs/semana5-agentes/tests/test_agente.py:52: AssertionError
+________________________ test_needs_retry[orden1-False] ________________________
+
+orden = {'attempts': 0, 'status': 'pending'}, esperado = False
+
+    @pytest.mark.parametrize(
+        "orden, esperado",
+        [
+            ({"status": "completed", "attempts": 0}, False),
+            ({"status": "pending", "attempts": 0}, False),
+            ({"status": "failed", "attempts": 1}, True),
+            ({"status": "failed", "attempts": 3}, False),
+        ],
+    )
+    def test_needs_retry(orden, esperado):
+>       assert agente.needs_retry(orden) is esperado
+E       AssertionError: assert None is False
+E        +  where None = <function needs_retry at 0x108e471c0>({'attempts': 0, 'status': 'pending'})
+E        +    where <function needs_retry at 0x108e471c0> = agente.needs_retry
+
+labs/semana5-agentes/tests/test_agente.py:52: AssertionError
+________________________ test_needs_retry[orden2-True] _________________________
+
+orden = {'attempts': 1, 'status': 'failed'}, esperado = True
+
+    @pytest.mark.parametrize(
+        "orden, esperado",
+        [
+            ({"status": "completed", "attempts": 0}, False),
+            ({"status": "pending", "attempts": 0}, False),
+            ({"status": "failed", "attempts": 1}, True),
+            ({"status": "failed", "attempts": 3}, False),
+        ],
+    )
+    def test_needs_retry(orden, esperado):
+>       assert agente.needs_retry(orden) is esperado
+E       AssertionError: assert None is True
+E        +  where None = <function needs_retry at 0x108e471c0>({'attempts': 1, 'status': 'failed'})
+E        +    where <function needs_retry at 0x108e471c0> = agente.needs_retry
+
+labs/semana5-agentes/tests/test_agente.py:52: AssertionError
+________________________ test_needs_retry[orden3-False] ________________________
+
+orden = {'attempts': 3, 'status': 'failed'}, esperado = False
+
+    @pytest.mark.parametrize(
+        "orden, esperado",
+        [
+            ({"status": "completed", "attempts": 0}, False),
+            ({"status": "pending", "attempts": 0}, False),
+            ({"status": "failed", "attempts": 1}, True),
+            ({"status": "failed", "attempts": 3}, False),
+        ],
+    )
+    def test_needs_retry(orden, esperado):
+>       assert agente.needs_retry(orden) is esperado
+E       AssertionError: assert None is False
+E        +  where None = <function needs_retry at 0x108e471c0>({'attempts': 3, 'status': 'failed'})
+E        +    where <function needs_retry at 0x108e471c0> = agente.needs_retry
+
+labs/semana5-agentes/tests/test_agente.py:52: AssertionError
+___________________ test_run_agent_sobre_la_cola_de_ejemplo ____________________
+
+cola = PosixPath('<tmp>
+
+    def test_run_agent_sobre_la_cola_de_ejemplo(cola):
+>       resumen = agente.run_agent(cola)
+E       TypeError: run_agent() takes 0 positional arguments but 1 was given
+
+labs/semana5-agentes/tests/test_agente.py:56: TypeError
+_______________________ test_dry_run_no_modifica_la_cola _______________________
+
+cola = PosixPath('<tmp>
+
+    def test_dry_run_no_modifica_la_cola(cola):
+        antes = cola.read_text()
+>       resumen = agente.run_agent(cola, dry_run=True)
+E       TypeError: run_agent() got an unexpected keyword argument 'dry_run'
+
+labs/semana5-agentes/tests/test_agente.py:72: TypeError
+__________________ test_circuit_breaker_con_demasiadas_fallas __________________
+
+tmp_path = PosixPath('<tmp>
+
+    def test_circuit_breaker_con_demasiadas_fallas(tmp_path):
+        """Muchas fallas a la vez sugieren un problema sistémico: no reintentar en masa."""
+        cola = tmp_path / "queue.json"
+>       fallas = [{"id": f"ORD-{i}", "status": "failed", "attempts": 0} for i in range(agente.MAX_ACTIONS_PER_RUN + 1)]
+E       AttributeError: module 'agente_esqueleto' has no attribute 'MAX_ACTIONS_PER_RUN'
+
+labs/semana5-agentes/tests/test_agente.py:80: AttributeError
+=========================== short test summary info ============================
+FAILED labs/semana5-agentes/tests/test_agente.py::test_cola_inexistente_no_es_error
+FAILED labs/semana5-agentes/tests/test_agente.py::test_json_corrupto_falla_ruidosamente
+FAILED labs/semana5-agentes/tests/test_agente.py::test_needs_retry[orden0-False]
+FAILED labs/semana5-agentes/tests/test_agente.py::test_needs_retry[orden1-False]
+FAILED labs/semana5-agentes/tests/test_agente.py::test_needs_retry[orden2-True]
+FAILED labs/semana5-agentes/tests/test_agente.py::test_needs_retry[orden3-False]
+FAILED labs/semana5-agentes/tests/test_agente.py::test_run_agent_sobre_la_cola_de_ejemplo
+FAILED labs/semana5-agentes/tests/test_agente.py::test_dry_run_no_modifica_la_cola
+FAILED labs/semana5-agentes/tests/test_agente.py::test_circuit_breaker_con_demasiadas_fallas
+9 failed in 0.03s

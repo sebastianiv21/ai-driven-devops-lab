@@ -1,0 +1,44 @@
+$ python labs/semana5-agentes/agente_esqueleto.py --dry-run
+2026-11-17T13:57:19+00:00 [agente] ORD-1002: re-encolada (intento 2/3)
+2026-11-17T13:57:19+00:00 [agente] ORD-1003: 3 intentos agotados -> escalada a un humano
+2026-11-17T13:57:19+00:00 [agente] dry-run: la cola NO se modificó
+2026-11-17T13:57:19+00:00 [agente] resumen: {'reintentadas': ['ORD-1002'], 'escaladas': ['ORD-1003'], 'abortado': False}
+
+$ python labs/semana5-agentes/agente_esqueleto.py
+2026-11-17T13:57:19+00:00 [agente] ORD-1002: re-encolada (intento 2/3)
+2026-11-17T13:57:19+00:00 [agente] ORD-1003: 3 intentos agotados -> escalada a un humano
+2026-11-17T13:57:19+00:00 [agente] resumen: {'reintentadas': ['ORD-1002'], 'escaladas': ['ORD-1003'], 'abortado': False}
+
+$ cat app/worker/queue.json
+[
+  {
+    "id": "ORD-1001",
+    "status": "completed",
+    "attempts": 0
+  },
+  {
+    "id": "ORD-1002",
+    "status": "pending",
+    "attempts": 2
+  },
+  {
+    "id": "ORD-1003",
+    "status": "needs_human",
+    "attempts": 3
+  },
+  {
+    "id": "ORD-1004",
+    "status": "pending",
+    "attempts": 0
+  }
+]
+
+$ python labs/semana5-agentes/agente_esqueleto.py   # segunda corrida: ya no hay nada que hacer
+2026-11-17T13:57:19+00:00 [agente] resumen: {'reintentadas': [], 'escaladas': [], 'abortado': False}
+
+$ python app/worker/worker.py   # el worker toma las órdenes re-encoladas
+Procesando orden ORD-1001...
+Procesando orden ORD-1002...
+Procesando orden ORD-1003...
+Procesando orden ORD-1004...
+4 órdenes procesadas.

@@ -189,3 +189,52 @@ de cotización ya mostraba el bug de la Semana 2 (10 artículos → `90.0`).
 
 ---
 
+## Semana 5 — Introducción a agentes / Desarrollo de agentes
+
+**¿Construiste, configuraste o probaste un agente de IA aplicado a tu problema esta semana?**
+> Sí: completé el agente de reintentos de órdenes fallidas.
+
+**Contexto que le diste a la IA**
+> El esqueleto con TODOs, la cola de ejemplo y mis decisiones de diseño como requisitos: no
+> reintentar más allá de `MAX_RETRIES`, escalar a un humano, y no actuar en masa.
+
+**Problema o pregunta que trabajaste**
+> Automatizar el reintento de órdenes fallidas sin crear un agente que empeore un incidente.
+
+**Cómo usaste la IA**
+> Primero escribí los tests que fijan cada decisión (9 tests, todos fallando antes de
+> implementar), luego la implementación. Decisiones:
+> - Cola inexistente → lista vacía (no es error); JSON corrupto → falla ruidosamente (no sobrescribir lo que no entiende).
+> - `failed` con intentos < 3 → se re-encola como `pending` (+1 intento); el agente no procesa, solo re-encola.
+> - `failed` con 3 intentos → `needs_human`, nunca más reintentos.
+> - Circuit breaker: más de 20 fallas a la vez = problema sistémico → no toca nada y alerta.
+> - `--dry-run`, escritura atómica de la cola, log con timestamp de cada acción.
+
+**Cómo validaste lo que propuso**
+> 15/15 tests pasan: los 9 iniciales más 6 agregados tras revisión (límite exacto del circuit
+> breaker en 20, `attempts=2`, orden sin campo `attempts`, sin acciones no reescribe la cola,
+> código de salida 2 cuando se aborta, y la cola reescrita conserva permisos 0644 sin dejar
+> `.tmp` huérfanos; este último falló antes del fix porque el archivo temporal se crea con 0600). CI corre ahora también estos tests.
+> Corrida real sobre `app/worker/queue.json`: ORD-1002 re-encolada (intento
+> 2/3), ORD-1003 escalada, ORD-1001/1004 sin cambios; segunda corrida no hace nada (idempotente).
+> Evidencia: `evidencia/semana5/01..03`.
+
+**Qué acertó / qué falló la IA**
+> La implementación salió bien a la primera porque los tests definían el comportamiento. El
+> hallazgo importante vino de **verificar más allá del agente**: al correr el worker después, procesa
+> las 4 órdenes, incluidas `completed` y `needs_human`. El worker ignora el `status`, así que la
+> escalación no tiene efecto aguas abajo. Lo dejo documentado como riesgo; arreglarlo es cambiar
+> el worker, fuera del alcance del lab. Segundo riesgo conocido: la escritura de la cola es
+> atómica pero sin lock, así que si el worker escribe al mismo tiempo una de las dos escrituras
+> se pierde; en producción la cola debería vivir en un sistema con concurrencia (SQS, una tabla).
+> Tras la revisión, el agente sale con código 2 cuando se activa el circuit breaker, para que
+> cron/CI lo trate como alerta y no como corrida exitosa.
+
+**Habilidad practicada esta semana**
+> [x] Contexto estructurado a la IA   [x] Investigación antes de solución   [x] Validación de comandos/config   [ ] Protección de información sensible
+
+**Lección aprendida (una frase)**
+> La autonomía de un agente se diseña por sus límites (cuándo se detiene, cuándo escala), y hay que probar el sistema completo, no solo el agente.
+
+---
+

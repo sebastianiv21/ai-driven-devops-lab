@@ -1,0 +1,30 @@
+============================= test session starts ==============================
+platform darwin -- Python 3.14.5, pytest-8.2.0, pluggy-1.7.0 -- <repo>/.venv/bin/python
+rootdir: <repo>
+collecting ... collected 23 items
+
+labs/semana2-desarrollo-testing/tests/test_orders.py::test_sin_descuento_pocos_articulos PASSED [  4%]
+labs/semana2-desarrollo-testing/tests/test_orders.py::test_descuento_10_porciento_rango_medio PASSED [  8%]
+labs/semana2-desarrollo-testing/tests/test_orders.py::test_descuento_15_porciento_en_el_limite_de_10 PASSED [ 13%]
+labs/semana2-desarrollo-testing/tests/test_orders.py::test_descuento_15_porciento_mas_de_10 PASSED [ 17%]
+labs/semana2-desarrollo-testing/tests/test_orders.py::test_sin_descuento_en_el_limite_de_5 PASSED [ 21%]
+labs/semana2-desarrollo-testing/tests/test_orders.py::test_descuento_10_porciento_en_el_limite_de_9 PASSED [ 26%]
+labs/semana2-desarrollo-testing/tests/test_orders.py::test_descuento_15_porciento_sumando_varias_lineas PASSED [ 30%]
+labs/semana2-desarrollo-testing/tests/test_orders.py::test_orden_vacia PASSED [ 34%]
+labs/semana5-agentes/tests/test_agente.py::test_cola_inexistente_no_es_error PASSED [ 39%]
+labs/semana5-agentes/tests/test_agente.py::test_json_corrupto_falla_ruidosamente PASSED [ 43%]
+labs/semana5-agentes/tests/test_agente.py::test_needs_retry[orden0-False] PASSED [ 47%]
+labs/semana5-agentes/tests/test_agente.py::test_needs_retry[orden1-False] PASSED [ 52%]
+labs/semana5-agentes/tests/test_agente.py::test_needs_retry[orden2-True] PASSED [ 56%]
+labs/semana5-agentes/tests/test_agente.py::test_needs_retry[orden3-True] PASSED [ 60%]
+labs/semana5-agentes/tests/test_agente.py::test_needs_retry[orden4-False] PASSED [ 65%]
+labs/semana5-agentes/tests/test_agente.py::test_needs_retry[orden5-True] PASSED [ 69%]
+labs/semana5-agentes/tests/test_agente.py::test_run_agent_sobre_la_cola_de_ejemplo PASSED [ 73%]
+labs/semana5-agentes/tests/test_agente.py::test_dry_run_no_modifica_la_cola PASSED [ 78%]
+labs/semana5-agentes/tests/test_agente.py::test_sin_acciones_no_reescribe_la_cola PASSED [ 82%]
+labs/semana5-agentes/tests/test_agente.py::test_circuit_breaker_no_se_activa_en_el_limite PASSED [ 86%]
+labs/semana5-agentes/tests/test_agente.py::test_cli_sale_con_error_si_el_circuit_breaker_se_activa PASSED [ 91%]
+labs/semana5-agentes/tests/test_agente.py::test_escritura_conserva_permisos_legibles PASSED [ 95%]
+labs/semana5-agentes/tests/test_agente.py::test_circuit_breaker_con_demasiadas_fallas PASSED [100%]
+
+============================== 23 passed in 0.06s ==============================
