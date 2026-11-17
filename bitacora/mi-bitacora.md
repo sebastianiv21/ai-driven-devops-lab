@@ -217,7 +217,8 @@ de cotización ya mostraba el bug de la Semana 2 (10 artículos → `90.0`).
 > `.tmp` huérfanos; este último falló antes del fix porque el archivo temporal se crea con 0600). CI corre ahora también estos tests.
 > Corrida real sobre `app/worker/queue.json`: ORD-1002 re-encolada (intento
 > 2/3), ORD-1003 escalada, ORD-1001/1004 sin cambios; segunda corrida no hace nada (idempotente).
-> Evidencia: `evidencia/semana5/01..03`.
+> Evidencia: `evidencia/semana5/01..03` y la
+> [corrida en GitHub Actions con los tests del agente](https://github.com/sebastianiv21/ai-driven-devops-lab/actions/runs/44166813817).
 
 **Qué acertó / qué falló la IA**
 > La implementación salió bien a la primera porque los tests definían el comportamiento. El
@@ -235,6 +236,49 @@ de cotización ya mostraba el bug de la Semana 2 (10 artículos → `90.0`).
 
 **Lección aprendida (una frase)**
 > La autonomía de un agente se diseña por sus límites (cuándo se detiene, cuándo escala), y hay que probar el sistema completo, no solo el agente.
+
+---
+
+## Semana 6 — Observabilidad moderna / AIOps en práctica
+
+**¿Usaste IA para analizar logs, métricas o trazas, detectar anomalías, o correlacionar eventos esta semana?**
+> Sí: análisis del log de `orders-api` durante la alerta de latencia.
+
+**Contexto que le diste a la IA**
+> El log completo (155 líneas, cabe en contexto) y la instrucción de basar las hipótesis solo
+> en lo que el log muestra.
+
+**Problema o pregunta que trabajaste**
+> Alerta genérica de "latencia elevada" el 20-sep por la mañana, sin más contexto.
+
+**Cómo usaste la IA**
+> Detectó el patrón: 35 `status=500` con `DatabaseTimeoutError: connection pool exhausted`
+> entre 08:21:57 y 08:24:07, con latencias de 0,8–2,3 s. Luego la usé para redactar el postmortem.
+
+**Cómo validaste lo que propuso**
+> Verificación manual con `awk`/`grep` (`evidencia/semana6/01-verificacion-manual.txt`):
+> - 35 ERROR / 120 INFO; los 35 errores son el mismo mensaje y el mismo endpoint.
+> - Ventana confirmada: último 200 a las 08:21:36, primer 500 a las 08:21:57, último 500 a las 08:24:07, primer 200 a las 08:24:41.
+> - Latencia promedio por minuto: 20–76 ms antes y después; 534–1.643 ms durante.
+> - Dato que solo apareció al agregar por minuto: el volumen sube de 3–5 a **15 requests/min** durante la ventana.
+> Postmortem: `labs/semana6-observabilidad/postmortem.md`.
+
+**Qué acertó / qué falló la IA**
+> Acertó patrón, ventana y causa probable (saturación del pool). La verificación por minuto agregó
+> el volumen ×4 y permitió descartar la fuga de conexiones: una fuga no se recupera sola en 2
+> minutos sin reinicio. Con este log no se puede saber si el volumen fue causa (pico) o efecto
+> (reintentos de clientes).
+
+**Evidencia adicional que pediría en un caso real**
+> Métricas del pool y de la BD (`pg_stat_activity`, locks, slow queries), tráfico por cliente
+> en el load balancer, deploys o cambios de config cerca de las 08:20, actividad del worker en la
+> misma BD y trazas de requests lentos.
+
+**Habilidad practicada esta semana**
+> [x] Contexto estructurado a la IA   [x] Investigación antes de solución   [x] Validación de comandos/config   [ ] Protección de información sensible
+
+**Lección aprendida (una frase)**
+> La IA encuentra el patrón rápido; contar líneas a mano es lo que separa "causa probable" de "causa confirmada".
 
 ---
 

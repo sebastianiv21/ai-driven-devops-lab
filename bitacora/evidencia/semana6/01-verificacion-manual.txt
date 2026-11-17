@@ -1,0 +1,100 @@
+## Líneas totales
+     155
+
+## Por nivel
+  35 ERROR
+ 120 INFO
+
+## Por status HTTP
+ 109 status=200
+   5 status=201
+   6 status=404
+  35 status=500
+
+## Líneas que no son INFO (todas)
+2026-09-20T08:21:57 ERROR orders-api POST /orders/quote status=500 latency_ms=1122 error="DatabaseTimeoutError: connection pool exhausted"
+2026-09-20T08:21:59 ERROR orders-api POST /orders/quote status=500 latency_ms=1840 error="DatabaseTimeoutError: connection pool exhausted"
+2026-09-20T08:22:01 ERROR orders-api POST /orders/quote status=500 latency_ms=1180 error="DatabaseTimeoutError: connection pool exhausted"
+2026-09-20T08:22:03 ERROR orders-api POST /orders/quote status=500 latency_ms=2018 error="DatabaseTimeoutError: connection pool exhausted"
+2026-09-20T08:22:05 ERROR orders-api POST /orders/quote status=500 latency_ms=2182 error="DatabaseTimeoutError: connection pool exhausted"
+2026-09-20T08:22:08 ERROR orders-api POST /orders/quote status=500 latency_ms=1626 error="DatabaseTimeoutError: connection pool exhausted"
+2026-09-20T08:22:10 ERROR orders-api POST /orders/quote status=500 latency_ms=1966 error="DatabaseTimeoutError: connection pool exhausted"
+2026-09-20T08:22:13 ERROR orders-api POST /orders/quote status=500 latency_ms=1985 error="DatabaseTimeoutError: connection pool exhausted"
+2026-09-20T08:22:19 ERROR orders-api POST /orders/quote status=500 latency_ms=881 error="DatabaseTimeoutError: connection pool exhausted"
+2026-09-20T08:22:25 ERROR orders-api POST /orders/quote status=500 latency_ms=967 error="DatabaseTimeoutError: connection pool exhausted"
+2026-09-20T08:22:30 ERROR orders-api POST /orders/quote status=500 latency_ms=2146 error="DatabaseTimeoutError: connection pool exhausted"
+2026-09-20T08:22:36 ERROR orders-api POST /orders/quote status=500 latency_ms=1957 error="DatabaseTimeoutError: connection pool exhausted"
+2026-09-20T08:22:42 ERROR orders-api POST /orders/quote status=500 latency_ms=1447 error="DatabaseTimeoutError: connection pool exhausted"
+2026-09-20T08:22:46 ERROR orders-api POST /orders/quote status=500 latency_ms=1218 error="DatabaseTimeoutError: connection pool exhausted"
+2026-09-20T08:22:50 ERROR orders-api POST /orders/quote status=500 latency_ms=1288 error="DatabaseTimeoutError: connection pool exhausted"
+2026-09-20T08:22:54 ERROR orders-api POST /orders/quote status=500 latency_ms=1610 error="DatabaseTimeoutError: connection pool exhausted"
+2026-09-20T08:22:57 ERROR orders-api POST /orders/quote status=500 latency_ms=2175 error="DatabaseTimeoutError: connection pool exhausted"
+2026-09-20T08:23:01 ERROR orders-api POST /orders/quote status=500 latency_ms=1736 error="DatabaseTimeoutError: connection pool exhausted"
+2026-09-20T08:23:05 ERROR orders-api POST /orders/quote status=500 latency_ms=2339 error="DatabaseTimeoutError: connection pool exhausted"
+2026-09-20T08:23:07 ERROR orders-api POST /orders/quote status=500 latency_ms=819 error="DatabaseTimeoutError: connection pool exhausted"
+2026-09-20T08:23:12 ERROR orders-api POST /orders/quote status=500 latency_ms=2072 error="DatabaseTimeoutError: connection pool exhausted"
+2026-09-20T08:23:18 ERROR orders-api POST /orders/quote status=500 latency_ms=1004 error="DatabaseTimeoutError: connection pool exhausted"
+2026-09-20T08:23:20 ERROR orders-api POST /orders/quote status=500 latency_ms=1901 error="DatabaseTimeoutError: connection pool exhausted"
+2026-09-20T08:23:23 ERROR orders-api POST /orders/quote status=500 latency_ms=1836 error="DatabaseTimeoutError: connection pool exhausted"
+2026-09-20T08:23:27 ERROR orders-api POST /orders/quote status=500 latency_ms=1071 error="DatabaseTimeoutError: connection pool exhausted"
+2026-09-20T08:23:31 ERROR orders-api POST /orders/quote status=500 latency_ms=940 error="DatabaseTimeoutError: connection pool exhausted"
+2026-09-20T08:23:34 ERROR orders-api POST /orders/quote status=500 latency_ms=1556 error="DatabaseTimeoutError: connection pool exhausted"
+2026-09-20T08:23:38 ERROR orders-api POST /orders/quote status=500 latency_ms=1123 error="DatabaseTimeoutError: connection pool exhausted"
+2026-09-20T08:23:43 ERROR orders-api POST /orders/quote status=500 latency_ms=1912 error="DatabaseTimeoutError: connection pool exhausted"
+2026-09-20T08:23:47 ERROR orders-api POST /orders/quote status=500 latency_ms=2052 error="DatabaseTimeoutError: connection pool exhausted"
+2026-09-20T08:23:53 ERROR orders-api POST /orders/quote status=500 latency_ms=816 error="DatabaseTimeoutError: connection pool exhausted"
+2026-09-20T08:23:59 ERROR orders-api POST /orders/quote status=500 latency_ms=1413 error="DatabaseTimeoutError: connection pool exhausted"
+2026-09-20T08:24:01 ERROR orders-api POST /orders/quote status=500 latency_ms=1075 error="DatabaseTimeoutError: connection pool exhausted"
+2026-09-20T08:24:05 ERROR orders-api POST /orders/quote status=500 latency_ms=1036 error="DatabaseTimeoutError: connection pool exhausted"
+2026-09-20T08:24:07 ERROR orders-api POST /orders/quote status=500 latency_ms=2320 error="DatabaseTimeoutError: connection pool exhausted"
+
+## Ventana de errores (primer y último status=500)
+2026-09-20T08:21:57
+2026-09-20T08:24:07
+
+## Latencia por minuto: n, promedio, máximo, #500
+2026-09-20T08:00  n=4   avg=40     max=55     err=0
+2026-09-20T08:01  n=4   avg=55     max=89     err=0
+2026-09-20T08:02  n=4   avg=59     max=88     err=0
+2026-09-20T08:03  n=4   avg=47     max=68     err=0
+2026-09-20T08:04  n=3   avg=60     max=68     err=0
+2026-09-20T08:05  n=4   avg=40     max=54     err=0
+2026-09-20T08:06  n=3   avg=63     max=83     err=0
+2026-09-20T08:07  n=3   avg=67     max=78     err=0
+2026-09-20T08:08  n=3   avg=34     max=40     err=0
+2026-09-20T08:09  n=3   avg=56     max=79     err=0
+2026-09-20T08:10  n=4   avg=61     max=88     err=0
+2026-09-20T08:11  n=4   avg=59     max=84     err=0
+2026-09-20T08:12  n=4   avg=71     max=88     err=0
+2026-09-20T08:13  n=4   avg=66     max=80     err=0
+2026-09-20T08:14  n=3   avg=65     max=90     err=0
+2026-09-20T08:15  n=4   avg=30     max=50     err=0
+2026-09-20T08:16  n=3   avg=66     max=80     err=0
+2026-09-20T08:17  n=5   avg=58     max=79     err=0
+2026-09-20T08:18  n=2   avg=36     max=43     err=0
+2026-09-20T08:19  n=5   avg=67     max=90     err=0
+2026-09-20T08:20  n=3   avg=76     max=82     err=0
+2026-09-20T08:21  n=6   avg=534    max=1840   err=2
+2026-09-20T08:22  n=15  avg=1643   max=2182   err=15
+2026-09-20T08:23  n=15  avg=1506   max=2339   err=15
+2026-09-20T08:24  n=4   avg=1119   max=2320   err=3
+2026-09-20T08:25  n=4   avg=42     max=55     err=0
+2026-09-20T08:26  n=4   avg=59     max=90     err=0
+2026-09-20T08:27  n=3   avg=33     max=51     err=0
+2026-09-20T08:28  n=4   avg=56     max=72     err=0
+2026-09-20T08:29  n=3   avg=54     max=80     err=0
+2026-09-20T08:30  n=3   avg=57     max=78     err=0
+2026-09-20T08:31  n=3   avg=67     max=88     err=0
+2026-09-20T08:32  n=3   avg=54     max=75     err=0
+2026-09-20T08:33  n=4   avg=66     max=85     err=0
+2026-09-20T08:34  n=3   avg=50     max=88     err=0
+2026-09-20T08:35  n=4   avg=63     max=72     err=0
+2026-09-20T08:36  n=1   avg=20     max=20     err=0
+## Endpoints
+ 155 POST /orders/quote
+
+## Última línea OK antes y primera después de la ventana
+2026-09-20T08:21:25 INFO orders-api POST /orders/quote status=200 latency_ms=27
+2026-09-20T08:21:36 INFO orders-api POST /orders/quote status=200 latency_ms=84
+2026-09-20T08:24:41 INFO orders-api POST /orders/quote status=200 latency_ms=46
+2026-09-20T08:25:01 INFO orders-api POST /orders/quote status=200 latency_ms=53
